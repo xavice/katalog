@@ -22,15 +22,23 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-3 js-item-list">
             @foreach($catalog->results as $book)
                 @include('components.item', compact('book'))
             @endforeach
         </div>
+        <div class="row mb-3">
+            <div class="col text-center">
+                <button class="btn btn-dark js-xhr-load-more" data-url="{{ $catalog->results->appends(request()->except(['page','_token']))->nextPageUrl() }}">Načítať viac kníh</button>
+            </div>
+        </div>
         <div class="row">
-            <div class="col">
+            <div class="col js-product-pagination">
                 {{ $catalog->results->appends(request()->except(['page','_token']))->links() }}
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script src="{{ asset('js/loadMore.js') }}"></script>
 @endsection
