@@ -17,6 +17,7 @@ class Catalog
             'title',
             'year',
             'rating',
+            'author',
         ];
         $this->allowed_order = [
             'asc',

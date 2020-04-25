@@ -12,11 +12,11 @@
 <body>
     <div class="container">
         <div class="row align-content-center">
-            <div class="col">
-                <h1><a href="/">Katalóg</a></h1>
+            <div class="col pt-3">
+                <strong><a href="/">Katalóg</a></strong>
             </div>
             <div class="col">
-                <form class="mt-3" action="">
+                <form class="mt-3" action="/" method="get">
                     <div class="form-group">
                         <input type="text" class="form-control" name="search" placeholder="Vyhľadávanie" value="{{ request()->search}}">
                     </div>
