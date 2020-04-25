@@ -11,11 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    $catalog = new \App\Catalog();
-    $catalog->getBooksResults(20);
-    return view('welcome', compact('catalog'));
-});
+Route::get('/', 'CatalogController@index');
 
 Route::get('/import', function () {
     $reader = new \App\Reader(resource_path('files/books.csv'));
