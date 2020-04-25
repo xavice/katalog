@@ -13,6 +13,7 @@
 
 Route::get('/', function () {
     $catalog = new \App\Catalog();
+    $catalog->getBooksResults(20);
     return view('welcome', compact('catalog'));
 });
 

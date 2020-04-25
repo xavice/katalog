@@ -1,36 +1,48 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-</head>
-<body>
-    <h1><a href="/">Katalóg</a></h1>
+@extends('layout')
 
+@section('content')
     <div class="container">
         <div class="row">
-            @foreach($catalog->books as $book)
-                <div  class="col-sm-3 mb-4 ">
-                    <div class="item p-3 border">
+            <div class="col">
+                <p>Celkový počet kníh{{ request()->search ? ' vyhovujúcemu hľadaniu ' . request()->search: '' }}: {{ $catalog->results->total() }}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <strong>Zoradiť podľa</strong>
+                <div class="mt-1">
+                    {!! buildFilterLink(request()->fullUrlWithQuery(['sort' => 'title', 'order' => 'asc']), 'Abecedy', 'keyboard_arrow_up') !!}
+                    {!! buildFilterLink(request()->fullUrlWithQuery(['sort' => 'title', 'order' => 'desc']), 'Abecedy', 'keyboard_arrow_down') !!}
+                    {!! buildFilterLink(request()->fullUrlWithQuery(['sort' => 'year', 'order' => 'asc']), 'Roku vydania', 'keyboard_arrow_up') !!}
+                    {!! buildFilterLink(request()->fullUrlWithQuery(['sort' => 'year', 'order' => 'desc']), 'Roku vydania', 'keyboard_arrow_down') !!}
+                    {!! buildFilterLink(request()->fullUrlWithQuery(['sort' => 'rating', 'order' => 'asc']), 'Hodnotenia', 'keyboard_arrow_up') !!}
+                    {!! buildFilterLink(request()->fullUrlWithQuery(['sort' => 'rating', 'order' => 'desc']), 'Hodnotenia', 'keyboard_arrow_down') !!}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            @foreach($catalog->results as $book)
+                <div class="col-xs-12 col-md-6 col-lg-3 mb-4">
+                    <div class="item p-3 border h-100 d-flex flex-column">
                         <div class="text-center mb-3">
-                            <img class="img-fluid" src="{{ $book->picture }}" alt="">
+                            <img class="img-fluid" src="{{ $book->picture}}"  alt="{{ $book->title }}"
+                                 onerror="this.onerror=null;this.src='{{ asset('images/no-image.jpg') }}';">
                         </div>
-
-                        <p>
+                        <div class="mt-auto">
                             <strong>{{ $book->title }}</strong> <br>
-                            Autor: {{ $book->author }} <br>
-                            Vydavateľ: {{ $book->publisher }} <br>
-                            Rok: {{ $book->year }}
-                        </p>
+                            {{ $book->author ?: 'Neuvedený' }} <br>
+                            <small>{{ $book->publisher }}, {{ $book->year }}</small> <br>
+                            <small>Hodnotenie: {{ $book->rating }}</small>
+                        </div>
                         <a href="{{ route('detail', ['id' => $book->id]) }}">Detail</a>
                     </div>
                 </div>
             @endforeach
         </div>
+        <div class="row">
+            <div class="col">
+                {{ $catalog->results->appends(request()->except(['page','_token']))->links() }}
+            </div>
+        </div>
     </div>
-</body>
-</html>
+@endsection
